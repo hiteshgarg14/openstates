@@ -16,6 +16,7 @@ class MIEventScraper(Scraper):
         html = self.get(url).text
         page = lxml.html.fromstring(html)
         trs = page.xpath("//table[@id='frg_committeemeeting_MeetingTable']/tr")
+        descp = page.xpath("//span[@class='definition']")[0].text_content().strip()
         metainf = {}
         for tr in trs:
             tds = tr.xpath(".//td")
@@ -74,6 +75,7 @@ class MIEventScraper(Scraper):
             start_time=self._tz.localize(datetime),
             timezone=self._tz.zone,
             location_name=where,
+            description=descp
         )
         event.add_source(url)
         event.add_source(mi_events)
